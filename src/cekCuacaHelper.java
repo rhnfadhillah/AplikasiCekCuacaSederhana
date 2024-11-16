@@ -82,6 +82,33 @@ public class cekCuacaHelper {
         }
     }
      
+     public static String getWeatherImagePath(String description) {
+        switch (description.toLowerCase()) {
+            case "clear sky":
+                return "images/clearSky.png";
+            case "few clouds":
+                return "images/fewClouds.png";
+            case "scattered clouds":
+            case "broken clouds":
+                return "images/scatteredClouds.png";
+            case "overcast clouds":
+                return "images/overcast.png";
+            case "shower rain":
+                return "images/showerRain.png";
+            case "light rain":
+            case "rain":
+                return "images/rain.png";
+            case "thunderstorm":
+                return "images/thunderstorm.png";
+            case "snow":
+                return "images/snow.png";
+            case "mist":
+                return "images/mist.png";
+            default:
+                return "images/default.png"; // Default image if no match found
+        }
+    }
+     
     static void updateCitySearchCount(String city) {
         int count = citySearchCount.getOrDefault(city, 0);
         count++;
