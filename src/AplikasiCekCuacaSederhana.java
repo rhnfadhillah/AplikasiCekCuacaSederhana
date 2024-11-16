@@ -1,4 +1,6 @@
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import javax.swing.ImageIcon;
@@ -80,6 +82,34 @@ public class AplikasiCekCuacaSederhana extends javax.swing.JFrame {
         }
         return -1;
     }
+    
+    private void saveDataToCSV() {
+        DefaultTableModel model = (DefaultTableModel) tabelCuaca.getModel();
+        StringBuilder sb = new StringBuilder();
+
+        // Add header
+        for (int col = 0; col < model.getColumnCount(); col++) {
+            sb.append(model.getColumnName(col)).append(",");
+        }
+        sb.setLength(sb.length() - 1); // Remove the last comma
+        sb.append("\n");
+
+        // Add rows
+        for (int row = 0; row < model.getRowCount(); row++) {
+            for (int col = 0; col < model.getColumnCount(); col++) {
+                sb.append(model.getValueAt(row, col)).append(",");
+            }
+            sb.setLength(sb.length() - 1); // Remove the last comma
+            sb.append("\n");
+        }
+
+        try (FileWriter writer = new FileWriter("cuaca_data.csv")) {
+            writer.write(sb.toString());
+            JOptionPane.showMessageDialog(this, "Data berhasil disimpan ke cuaca_data.csv", "Informasi", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Terjadi kesalahan saat menyimpan data: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -98,7 +128,7 @@ public class AplikasiCekCuacaSederhana extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         comboFavorit = new javax.swing.JComboBox<>();
         labelImage = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnSimpan = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabelCuaca = new javax.swing.JTable();
 
@@ -123,7 +153,12 @@ public class AplikasiCekCuacaSederhana extends javax.swing.JFrame {
 
         labelImage.setPreferredSize(new java.awt.Dimension(50, 50));
 
-        jButton1.setText("Simpan");
+        btnSimpan.setText("Simpan");
+        btnSimpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSimpanActionPerformed(evt);
+            }
+        });
 
         tabelCuaca.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -151,7 +186,7 @@ public class AplikasiCekCuacaSederhana extends javax.swing.JFrame {
                             .addComponent(btnCek))
                         .addGap(50, 50, 50)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton1)
+                            .addComponent(btnSimpan)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(txtKota)
                                 .addComponent(comboFavorit, 0, 192, Short.MAX_VALUE)))))
@@ -172,7 +207,7 @@ public class AplikasiCekCuacaSederhana extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCek)
-                    .addComponent(jButton1))
+                    .addComponent(btnSimpan))
                 .addGap(22, 22, 22)
                 .addComponent(labelCuaca)
                 .addGap(18, 18, 18)
@@ -236,6 +271,11 @@ public class AplikasiCekCuacaSederhana extends javax.swing.JFrame {
 
     }
     }//GEN-LAST:event_btnCekActionPerformed
+
+    private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
+        // TODO add your handling code here:
+        saveDataToCSV();
+    }//GEN-LAST:event_btnSimpanActionPerformed
     
     /**
      * @param args the command line arguments
@@ -274,8 +314,8 @@ public class AplikasiCekCuacaSederhana extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCek;
+    private javax.swing.JButton btnSimpan;
     private javax.swing.JComboBox<String> comboFavorit;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
