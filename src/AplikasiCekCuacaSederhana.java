@@ -51,13 +51,34 @@ public class AplikasiCekCuacaSederhana extends javax.swing.JFrame {
         }   
     }
     
-    private void addRowToTable(String city, String weather, String temperature) {
+    private void addOrUpdateRowInTable(String city, String weather, String temperature) {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
         String formattedDateTime = now.format(formatter);
 
         DefaultTableModel model = (DefaultTableModel) tabelCuaca.getModel();
-        model.addRow(new Object[]{city, weather, temperature, formattedDateTime});
+        int cityIndex = getCityIndexInTable(city);
+
+        if (cityIndex != -1) { // If the city already exists in the table
+            String existingDateTime = (String) model.getValueAt(cityIndex, 3);
+            if (!existingDateTime.equals(formattedDateTime)) {
+                model.setValueAt(weather, cityIndex, 1);
+                model.setValueAt(temperature, cityIndex, 2);
+                model.setValueAt(formattedDateTime, cityIndex, 3);
+            }
+        } else { // If the city does not exist in the table
+            model.addRow(new Object[]{city, weather, temperature, formattedDateTime});
+        }
+    }
+    
+    private int getCityIndexInTable(String city) {
+        DefaultTableModel model = (DefaultTableModel) tabelCuaca.getModel();
+        for (int i = 0; i < model.getRowCount(); i++) {
+            if (model.getValueAt(i, 0).equals(city)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     /**
@@ -207,7 +228,7 @@ public class AplikasiCekCuacaSederhana extends javax.swing.JFrame {
             String temperature = weatherInfo.split(",")[1].split(":")[1].trim();
 
             // Add data to table
-            addRowToTable(city, description, temperature);
+            addOrUpdateRowInTable(city, description, temperature);
         // Add city to the JTable if it doesn't already exist
     } catch (Exception e) {
         e.printStackTrace(); // Print the stack trace for debugging
