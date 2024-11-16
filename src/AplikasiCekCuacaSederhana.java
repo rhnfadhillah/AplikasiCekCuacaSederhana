@@ -1,4 +1,6 @@
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -110,6 +112,23 @@ public class AplikasiCekCuacaSederhana extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Terjadi kesalahan saat menyimpan data: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
+    private void loadDataFromCSV() {
+        DefaultTableModel model = (DefaultTableModel) tabelCuaca.getModel();
+        model.setRowCount(0); // Clear existing data
+
+        try (BufferedReader br = new BufferedReader(new FileReader("cuaca_data.csv"))) {
+            String line;
+            br.readLine(); // Skip the header
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(",");
+                model.addRow(values);
+            }
+            JOptionPane.showMessageDialog(this, "Data berhasil dimuat dari cuaca_data.csv", "Informasi", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Terjadi kesalahan saat memuat data: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -131,6 +150,7 @@ public class AplikasiCekCuacaSederhana extends javax.swing.JFrame {
         btnSimpan = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabelCuaca = new javax.swing.JTable();
+        btnLoad = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -170,6 +190,13 @@ public class AplikasiCekCuacaSederhana extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tabelCuaca);
 
+        btnLoad.setText("Load");
+        btnLoad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoadActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -185,11 +212,13 @@ public class AplikasiCekCuacaSederhana extends javax.swing.JFrame {
                             .addComponent(jLabel2)
                             .addComponent(btnCek))
                         .addGap(50, 50, 50)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnSimpan)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtKota)
-                                .addComponent(comboFavorit, 0, 192, Short.MAX_VALUE)))))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(btnSimpan)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnLoad))
+                            .addComponent(txtKota)
+                            .addComponent(comboFavorit, 0, 192, Short.MAX_VALUE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 766, Short.MAX_VALUE)
         );
@@ -207,7 +236,8 @@ public class AplikasiCekCuacaSederhana extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCek)
-                    .addComponent(btnSimpan))
+                    .addComponent(btnSimpan)
+                    .addComponent(btnLoad))
                 .addGap(22, 22, 22)
                 .addComponent(labelCuaca)
                 .addGap(18, 18, 18)
@@ -276,6 +306,11 @@ public class AplikasiCekCuacaSederhana extends javax.swing.JFrame {
         // TODO add your handling code here:
         saveDataToCSV();
     }//GEN-LAST:event_btnSimpanActionPerformed
+
+    private void btnLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadActionPerformed
+        // TODO add your handling code here:
+        loadDataFromCSV();
+    }//GEN-LAST:event_btnLoadActionPerformed
     
     /**
      * @param args the command line arguments
@@ -314,6 +349,7 @@ public class AplikasiCekCuacaSederhana extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCek;
+    private javax.swing.JButton btnLoad;
     private javax.swing.JButton btnSimpan;
     private javax.swing.JComboBox<String> comboFavorit;
     private javax.swing.JLabel jLabel1;

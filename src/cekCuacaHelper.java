@@ -77,6 +77,7 @@ public class cekCuacaHelper {
             case "snow":
                 return "Salju";
             case "mist":
+            case "haze" :
                 return "Kabut";
             default:
                 return description; // jika tidak ada terjemahan yang cocok, gunakan deskripsi asli

@@ -65,12 +65,14 @@
                               <Component id="btnCek" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="btnSimpan" min="-2" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="txtKota" max="32767" attributes="0"/>
-                                  <Component id="comboFavorit" pref="192" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <Component id="btnSimpan" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="btnLoad" min="-2" max="-2" attributes="0"/>
                               </Group>
+                              <Component id="txtKota" max="32767" attributes="0"/>
+                              <Component id="comboFavorit" pref="192" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -96,6 +98,7 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btnCek" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnSimpan" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnLoad" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
                   <Component id="labelCuaca" min="-2" max="-2" attributes="0"/>
@@ -204,6 +207,14 @@
             </Component>
           </SubComponents>
         </Container>
+        <Component class="javax.swing.JButton" name="btnLoad">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Load"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLoadActionPerformed"/>
+          </Events>
+        </Component>
       </SubComponents>
     </Container>
   </SubComponents>
