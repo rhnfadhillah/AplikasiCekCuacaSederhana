@@ -5,6 +5,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import javax.swing.JComboBox;
+import javax.swing.SwingUtilities;
 import org.json.JSONObject;
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -53,7 +54,7 @@ public class cekCuacaHelper {
         return String.format("Cuaca: %s, Suhu: %.2f °C", weather, temperature);
     }
     
-     private static String translateWeatherDescription(String description) {
+     static String translateWeatherDescription(String description) {
         switch (description.toLowerCase()) {
             case "clear sky":
                 return "Langit cerah";
@@ -83,41 +84,54 @@ public class cekCuacaHelper {
     }
      
      public static String getWeatherImagePath(String description) {
-        switch (description.toLowerCase()) {
-            case "clear sky":
-                return "images/clearSky.png";
-            case "few clouds":
-                return "images/fewClouds.png";
-            case "scattered clouds":
-            case "broken clouds":
-                return "images/scatteredClouds.png";
-            case "overcast clouds":
-                return "images/overcast.png";
-            case "shower rain":
-                return "images/showerRain.png";
-            case "light rain":
-            case "rain":
-                return "images/rain.png";
-            case "thunderstorm":
-                return "images/thunderstorm.png";
-            case "snow":
-                return "images/snow.png";
-            case "mist":
-                return "images/mist.png";
+        String path;
+        switch (description) {
+            case "Langit cerah":
+                path = "/images/clearSky.png";
+                break;
+            case "Sedikit berawan":
+                path = "/images/fewClouds.png";
+                break;
+            case "Awan tersebar":
+            case "Awan terputus":
+                path = "/images/scatteredClouds.png";
+                break;
+            case "Awan mendung":
+                path = "/images/overcast.png";
+                break;
+            case "Hujan gerimis":
+                path = "/images/showerRain.png";
+                break;
+            case "Hujan Ringan":
+            case "Hujan":
+                path = "/images/rain.png";
+                break;
+            case "Badai Petir":
+                path = "/images/thunderstorm.png";
+                break;
+            case "Salju":
+                path = "/images/snow.png";
+                break;
+            case "Kabut":
+                path = "/images/mist.png";
+                break;
             default:
-                return "images/default.png"; // Default image if no match found
+                path = "/images/default.png"; // Default image if no match found
+                break;
         }
+        return path;
     }
      
     static void updateCitySearchCount(String city) {
-        int count = citySearchCount.getOrDefault(city, 0);
+       int count = citySearchCount.getOrDefault(city, 0);
         count++;
         citySearchCount.put(city, count);
-
-        // Jika kota sudah dicari 3 kali atau lebih, tambahkan ke comboFavorit jika belum ada
-        if (count == 3 && !isCityInComboBox(city)) {
-            comboFavorit.addItem(city);
-            System.out.println("Kota " + city + " telah dicari sebanyak 3 kali dan ditambahkan ke daftar favorit.");
+        // If the city has been searched 3 times or more, add it to comboFavorit if not already present
+        if (count == 3) {
+            if (!isCityInComboBox(city)) {
+                comboFavorit.addItem(city);
+                System.out.println("Kota " + city + " telah dicari sebanyak 3 kali dan ditambahkan ke favorit.");
+            }
         }
     }
     private static boolean isCityInComboBox(String city) {
@@ -127,6 +141,15 @@ public class cekCuacaHelper {
             }
         }
         return false;
+    }
+    
+    public static void printFrequentlySearchedCities() {
+        System.out.println("Kota yang sering dicari:");
+        for (String city : citySearchCount.keySet()) {
+            if (citySearchCount.get(city) >= 3) {
+                System.out.println(city + ": " + citySearchCount.get(city) + " kali");
+            }
+        }
     }
     
     public static JComboBox<String> getComboFavorit() {

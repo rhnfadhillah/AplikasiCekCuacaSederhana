@@ -1,4 +1,5 @@
 
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /*
@@ -63,6 +64,7 @@ public class AplikasiCekCuacaSederhana extends javax.swing.JFrame {
         btnCek = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         comboFavorit = new javax.swing.JComboBox<>();
+        labelImage = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -83,13 +85,16 @@ public class AplikasiCekCuacaSederhana extends javax.swing.JFrame {
 
         comboFavorit.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pilih Kota" }));
 
+        labelImage.setPreferredSize(new java.awt.Dimension(50, 50));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(labelImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(labelCuaca)
                     .addComponent(btnCek)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -117,7 +122,9 @@ public class AplikasiCekCuacaSederhana extends javax.swing.JFrame {
                 .addComponent(btnCek)
                 .addGap(22, 22, 22)
                 .addComponent(labelCuaca)
-                .addContainerGap(357, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(labelImage, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(147, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -137,25 +144,33 @@ public class AplikasiCekCuacaSederhana extends javax.swing.JFrame {
     private void btnCekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCekActionPerformed
         // TODO add your handling code here:
         String city = txtKota.getText().trim();
-        if (!city.isEmpty()) {
-        try {
-            // Get weather info
-            String weatherInfo = WeatherHelper.getWeather(city);
-            labelCuaca.setText(weatherInfo);
-            
-            // Update city search count and add to comboFavorit if searched 3 times
-            WeatherHelper.updateCitySearchCount(city);
+    if (city.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Masukkan nama kota", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    try {
+        String weatherInfo = cekCuacaHelper.getWeather(city);
+        labelCuaca.setText(weatherInfo);
+        WeatherHelper.updateCitySearchCount(city);
             
             // Update the comboFavorit with new favorites
-            updateComboFavorit();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        updateComboFavorit();
+        // Mengambil deskripsi cuaca untuk mendapatkan path gambar
+        String description = weatherInfo.split(",")[0].split(":")[1].trim();
+        String imagePath = cekCuacaHelper.getWeatherImagePath(description);
+        java.net.URL imgURL = getClass().getResource(imagePath);
+        if (imgURL != null) {
+            labelImage.setIcon(new javax.swing.ImageIcon(imgURL));
+        } else {
+            System.err.println("Gambar ikon cuaca tidak ditemukan: " + imagePath);
         }
-    } else {
-        JOptionPane.showMessageDialog(this, "Nama kota tidak boleh kosong!", "Warning", JOptionPane.WARNING_MESSAGE);
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Gagal mendapatkan informasi cuaca", "Error", JOptionPane.ERROR_MESSAGE);
     }
     }//GEN-LAST:event_btnCekActionPerformed
-
+    
     /**
      * @param args the command line arguments
      */
@@ -198,6 +213,7 @@ public class AplikasiCekCuacaSederhana extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel labelCuaca;
+    private javax.swing.JLabel labelImage;
     private javax.swing.JTextField txtKota;
     // End of variables declaration//GEN-END:variables
 }
